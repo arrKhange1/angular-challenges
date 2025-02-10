@@ -26,9 +26,9 @@ import { Component, input, output, TemplateRef } from '@angular/core';
   `,
   imports: [NgTemplateOutlet],
 })
-export class CardComponent {
-  public listItemTemplate = input.required<TemplateRef<unknown>>();
+export class CardComponent<T extends { id: number }> {
+  public listItemTemplate = input.required<TemplateRef<{ $implicit: T }>>();
   public addItem = output<void>();
-  readonly list = input<any[] | null>(null);
+  readonly list = input<T[] | null>(null);
   readonly customClass = input('');
 }

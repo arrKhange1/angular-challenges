@@ -17,15 +17,13 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
   selector: 'app-student-card',
   template: `
     <ng-template #studentListItem let-item>
-      <app-list-item
-        (deleteItem)="deleteStudent($event)"
-        [id]="item.id"
-        [name]="item.firstName"></app-list-item>
+      <app-list-item (deleteItem)="deleteStudent(item.id)">
+        {{ item.firstName }}
+      </app-list-item>
     </ng-template>
-
     <app-card
-      (addItem)="addStudent()"
       [listItemTemplate]="studentListItem"
+      (addItem)="addStudent()"
       [list]="students()"
       customClass="bg-light-green">
       <img ngSrc="assets/img/student.webp" width="200" height="200" />
