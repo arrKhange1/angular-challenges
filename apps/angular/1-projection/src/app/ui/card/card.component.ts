@@ -4,31 +4,27 @@ import { Component, input, output, TemplateRef } from '@angular/core';
 @Component({
   selector: 'app-card',
   template: `
-    <div
-      class="flex w-fit flex-col gap-3 rounded-md border-2 border-black p-4"
-      [class]="customClass()">
-      <ng-content select="img"></ng-content>
-
-      <section>
-        @for (item of list(); track item) {
-          <ng-container
-            [ngTemplateOutlet]="listItemTemplate()"
-            [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
-        }
-      </section>
-
-      <button
-        class="rounded-sm border border-blue-500 bg-blue-300 p-2"
-        (click)="addItem.emit()">
-        Add
-      </button>
-    </div>
+    <ng-content select="img"></ng-content>
+    <section>
+      @for (item of list(); track item) {
+        <ng-container
+          [ngTemplateOutlet]="listItemTemplate()"
+          [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
+      }
+    </section>
+    <button
+      class="rounded-sm border border-blue-500 bg-blue-300 p-2"
+      (click)="addItem.emit()">
+      Add
+    </button>
   `,
+  host: {
+    class: 'flex w-fit flex-col gap-3 rounded-md border-2 border-black p-4',
+  },
   imports: [NgTemplateOutlet],
 })
 export class CardComponent<T extends { id: number }> {
   public listItemTemplate = input.required<TemplateRef<{ $implicit: T }>>();
   public addItem = output<void>();
   readonly list = input<T[] | null>(null);
-  readonly customClass = input('');
 }

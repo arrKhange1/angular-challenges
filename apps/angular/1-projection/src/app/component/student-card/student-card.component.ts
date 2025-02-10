@@ -24,14 +24,13 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
     <app-card
       [listItemTemplate]="studentListItem"
       (addItem)="addStudent()"
-      [list]="students()"
-      customClass="bg-light-green">
+      [list]="students()">
       <img ngSrc="assets/img/student.webp" width="200" height="200" />
     </app-card>
   `,
   styles: [
     `
-      ::ng-deep .bg-light-green {
+      app-card {
         background-color: rgba(0, 250, 0, 0.1);
       }
     `,

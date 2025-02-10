@@ -19,14 +19,13 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
     <app-card
       [listItemTemplate]="teacherListItem"
       (addItem)="addTeacher()"
-      [list]="teachers()"
-      customClass="bg-light-red">
+      [list]="teachers()">
       <img ngSrc="assets/img/teacher.png" width="200" height="200" />
     </app-card>
   `,
   styles: [
     `
-      ::ng-deep .bg-light-red {
+      app-card {
         background-color: rgba(250, 0, 0, 0.1);
       }
     `,
