@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { randText } from '@ngneat/falso';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Todo } from '../model/todo.model';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class TodoApiService {
   private http = inject(HttpClient);
 
   public getTodos(): Observable<Todo[]> {
-    return this.http.get<any[]>(this.baseUrl);
+    return this.http.get<Todo[]>(this.baseUrl);
   }
 
   public updateTodos(todo: Todo): Observable<Todo> {
@@ -30,5 +30,11 @@ export class TodoApiService {
         },
       },
     );
+  }
+
+  public deleteTodo(todoId: Todo['id']): Observable<Todo['id']> {
+    return this.http
+      .delete<void>(`${this.baseUrl}/${todoId}`)
+      .pipe(map(() => todoId));
   }
 }
