@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { randText } from '@ngneat/falso';
+import { Component, inject, OnInit } from '@angular/core';
+import { TodoApiService } from '../api/todo.api.service';
+import { Todo } from '../model/todo.model';
+import { TodoDataService } from '../store/todo.data.service';
 
 @Component({
   imports: [CommonModule],
   selector: 'app-root',
   template: `
-    <div *ngFor="let todo of todos">
+    <div *ngFor="let todo of todos()">
       {{ todo.title }}
       <button (click)="update(todo)">Update</button>
     </div>
@@ -15,36 +16,19 @@ import { randText } from '@ngneat/falso';
   styles: [],
 })
 export class AppComponent implements OnInit {
-  todos!: any[];
+  private todoApiService = inject(TodoApiService);
+  private todoDataService = inject(TodoDataService);
+  protected todos = this.todoDataService.todos;
 
-  constructor(private http: HttpClient) {}
-
-  ngOnInit(): void {
-    this.http
-      .get<any[]>('https://jsonplaceholder.typicode.com/todos')
-      .subscribe((todos) => {
-        this.todos = todos;
-      });
+  public ngOnInit(): void {
+    this.todoApiService.getTodos().subscribe((todos) => {
+      this.todoDataService.setTodos(todos);
+    });
   }
 
-  update(todo: any) {
-    this.http
-      .put<any>(
-        `https://jsonplaceholder.typicode.com/todos/${todo.id}`,
-        JSON.stringify({
-          todo: todo.id,
-          title: randText(),
-          body: todo.body,
-          userId: todo.userId,
-        }),
-        {
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          },
-        },
-      )
-      .subscribe((todoUpdated: any) => {
-        this.todos[todoUpdated.id - 1] = todoUpdated;
-      });
+  protected update(todo: Todo): void {
+    this.todoApiService.updateTodos(todo).subscribe((todoUpdated) => {
+      this.todoDataService.updateTodos(todoUpdated);
+    });
   }
 }
