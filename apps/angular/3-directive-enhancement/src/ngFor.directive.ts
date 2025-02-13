@@ -9,6 +9,11 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
+interface NgForTemplateContext<T> {
+  $implicit: T;
+  index: number;
+}
+
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[ngFor]',
@@ -31,5 +36,19 @@ export class NgForDirective<T> implements OnChanges {
     if ((!this.ngForOf() || this.ngForOf()?.length === 0) && emptyTemplate) {
       this.embeddedEmptyTemplate = this.vcr.createEmbeddedView(emptyTemplate);
     }
+  }
+
+  static ngTemplateContextGuard<T>(
+    dir: NgForDirective<T>,
+    ctx: unknown,
+  ): ctx is NgForTemplateContext<T> {
+    return true;
+  }
+
+  static ngTemplateGuard_ngForOf<T>(
+    dir: NgForDirective<T>,
+    expr: unknown,
+  ): expr is T[] {
+    return true;
   }
 }
